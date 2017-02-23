@@ -7,6 +7,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 
+import java.awt.Button;
 import java.awt.Font;
 import java.time.*;
 
@@ -41,6 +42,7 @@ public class MainStage extends Application{
 			   0,0,0,0,0,0,0,0,0,0};
 	
 	public int locCount = 0;
+	public boolean isAlive = true;
 	
 	public static void main(String[] args){
 		Application.launch(args);
@@ -54,6 +56,7 @@ public class MainStage extends Application{
 		scene.setRoot(root);
 		createGrid(root);
 		bubbleSort();
+		endPoint = path[path.length-1];
 		hearts = Integer.toString(health);
 		Text text = new Text(50, 550, "Health: " + hearts);
 
@@ -78,7 +81,12 @@ public class MainStage extends Application{
 				try{
 					Thread.sleep(50);
 					System.out.println("Debug:"+locCount);
-					moveBox(root);
+					if(isAlive){
+						moveBox(root);
+					}
+
+					hearts = Integer.toString(health);
+					text.setText("Health" + hearts);
 
 				}catch(InterruptedException ex){
 					Thread.currentThread().interrupt();
@@ -90,6 +98,11 @@ public class MainStage extends Application{
 	public void moveBox(AnchorPane root){
 
 		root.getChildren().removeAll(r);
+		if(endPoint.getX() == r.getX() && endPoint.getY() == r.getY()){
+			isAlive = false;
+			health--;
+		}
+		if(isAlive){
 			if(wayPoint.getX() > r.getX()){
 				System.out.println("Enemy movex");
 				dX = dX + moveX;
@@ -138,13 +151,14 @@ public class MainStage extends Application{
 					setWayPoint(root, path[locCount]);	
 				}
 			}
+		
 		r.setX(dX);
 		r.setY(dY);
 
 		r.setStroke(Color.BLACK);
 		r.setFill(Color.RED);
 			root.getChildren().add(r);
-
+		}
 
 	}
 	
@@ -199,11 +213,7 @@ public class MainStage extends Application{
 	
 	public void setWayPoint(AnchorPane root, box g){
 		System.out.println(wayPoint);
-		if(locCount == path.length){
-			endPoint = g;
-		}
 		wayPoint = g;
 		root.getChildren().add(wayPoint);
-		root.getChildren().add(endPoint);
 	}
 }
