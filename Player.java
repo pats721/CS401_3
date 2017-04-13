@@ -25,6 +25,9 @@ public class Player {
 		this.waveController = waveController;
 		this.towerList = new ArrayList<Tower>();
 		this.enemyList = enemies;
+		this.types[0] = TileType.Path;
+		this.types[1] = TileType.Water;
+		this.types[2] = TileType.Ground;
 	}
 
 	public void setTile() {
@@ -38,7 +41,7 @@ public class Player {
 		}
 		// Mouse Input.
 		if (Mouse.isButtonDown(0)) {
-			setTile();
+			towerList.add(new Tower("fkghhg", grid.GetTile((int) Math.floor(Mouse.getX() / 64), (int) Math.floor((HEIGHT - Mouse.getY() - 1) / 64)), TowerType.BasicSquirt, this.enemyList));
 		}
 
 		// Keyboard Input.
@@ -50,7 +53,7 @@ public class Player {
 				moveIndex();
 			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState()) {
-				towerList.add(new Tower("fkghhg", grid.GetTile(18, 9), TowerType.Basic, this.enemyList));
+				towerList.add(new Tower("fkghhg", grid.GetTile(18, 9), TowerType.BasicSquirt, this.enemyList));
 			}
 		}
 	}
@@ -61,4 +64,14 @@ public class Player {
 			index = 0;
 		}
 	}
+
+	public ArrayList<Tower> getTowerList() {
+		return towerList;
+	}
+
+	public void setTowerList(ArrayList<Tower> towerList) {
+		this.towerList = towerList;
+	}
+	
+	
 }
