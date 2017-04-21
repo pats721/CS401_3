@@ -1,0 +1,121 @@
+///Spawn Class
+import java.util.Random;
+
+public class Spawn {
+	public ArrayList<Enemy> enemies;
+	private EnemyType[] enemyTypes;
+	public int enemyCount;
+	public int maxEnemy;
+	public Tile spawn;
+	public Tile[] path;
+	public Tile endPoint;
+	private Player user;
+	}
+	public Spawn(int maxEnemyCount){
+		this.enemyCount = 0;
+		this.maxEnemy = maxEnemyCount;
+		this.enemies = new ArrayList<Enemy>(maxEnemyCount);
+		this.user = null;
+		this.enemyTypes = new EnemyType[4];
+		this.enemyTypes[0] = EnemyType.Fire;
+		this.enemyTypes[1] = EnemyType.Alien;
+		this.enemyTypes[2] = EnemyType.Devil;
+		this.enemyTypes[3] = EnemyType.Virus;
+	}
+public void SpawnEnemy(Tile spawn, Tile endPoint, Tile[] path){
+		this.spawn = spawn;
+		this.path = path;
+		Random random = new Random();
+		double enemyChooser;
+		if(enemyCount < maxEnemy){
+			enemyChooser = random.nextInt(4);
+			if(enemyChooser == 0){
+				Enemy e = new Enemy(spawn, endPoint, path, enemyTypes[0]);
+				enemies.add(e);
+				enemies.get(enemyCount).setIndex(enemyCount);
+				System.out.println("Enemy" + enemyCount + ":" + e);
+				enemyCount++;
+			}
+			else if(enemyChooser == 1){
+				Enemy e = new Enemy(spawn, endPoint, path, enemyTypes[1]);
+				enemies.add(e);
+				enemies.get(enemyCount).setIndex(enemyCount);
+				System.out.println("Enemy" + enemyCount + ":" + e);
+				enemyCount++;
+			}else if(enemyChooser == 2){
+				Enemy e = new Enemy(spawn, endPoint, path, enemyTypes[2]);
+				enemies.add(e);
+				enemies.get(enemyCount).setIndex(enemyCount);
+				System.out.println("Enemy" + enemyCount + ":" + e);
+				enemyCount++;
+			}else if(enemyChooser == 3){
+				Enemy e = new Enemy(spawn, endPoint, path, enemyTypes[3]);
+				enemies.add(e);
+				enemies.get(enemyCount).setIndex(enemyCount);
+				System.out.println("Enemy" + enemyCount + ":" + e);
+				enemyCount++;
+			}
+		}
+	}
+  
+  ///Enemy Class
+  public class Enemy {
+	private static final float TILE_SIZE = 64;
+	Texture texture;
+	EnemyType type;
+	private Texture backHealth, frontHealth, healthOutline; 
+	float x;
+	float y;
+	float width;
+	float hight;
+	Tile target;
+	Tile[] path;
+	public boolean isSpawned = false;
+	public boolean alive = true;
+	public int currPosition = 1;
+	public final float moveSpeed = 4f;
+	public Tile endPoint;
+	private int health = 4, healthStart;
+	private int index;
+	private boolean gotPoints = false;
+	private boolean attacked = false;
+	
+	public Enemy(Tile spawn, Tile endPoint, Tile[] path, EnemyType type){
+		this.backHealth = QuickLoad ("backHealth");
+		this.frontHealth = QuickLoad ("frontHealth");
+		this.healthOutline = QuickLoad ("healthOutline");
+		this.x = spawn.getX();
+		this.y = spawn.getY();
+		this.width = spawn.getWidth();
+		this.hight = spawn.getHight();
+		this.path = path;
+		this.endPoint = endPoint;
+		this.index = 0;
+		this.healthStart = health;
+		this.type = type;
+		this.texture = QuickLoad(type.texture);
+	}
+  
+  public void DrawEnemy(){
+		float healthTotal = health / healthStart;
+		DrawQuadTex(this.texture, x, y, width, hight);
+		DrawQuadTex(backHealth, x, y - 14, width, 7);
+		DrawQuadTex(frontHealth, x, y - 14, TILE_SIZE * healthTotal, 7);
+		DrawQuadTex(healthOutline, x, y - 14, width, 7);
+	}
+  
+  ///EnemyType Class
+  
+  package data;
+
+public enum EnemyType {
+	Fire("Fire32", true), Alien("Alien64", true), Devil("devil64", true), Virus("virus64", true);
+	
+	String texture;
+	boolean build;
+	
+	EnemyType(String texture, boolean build){
+		this.texture = texture;
+		this.build = build;
+	}
+}
